@@ -1,7 +1,4 @@
 _Store
-product/
-UMCommunity/SDK\ Manager/doc/*
-build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
