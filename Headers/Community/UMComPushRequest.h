@@ -41,7 +41,8 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @param userAccount 登录用户
  @param result 返回结果,responseObject是包含登录完成的`UMComUser`对象的NSArray
  */
-+ (void)loginWithUser:(UMComUserAccount *)userAccount completion:(PostResponseResultResponse)result;
++ (void)loginWithUser:(UMComUserAccount *)userAccount
+           completion:(PostResponseResultResponse)result;
 
 
 /**
@@ -50,16 +51,18 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @param userAccount 登录用户
  @param result 返回结果
  */
-+ (void)updateWithUser:(UMComUserAccount *)userAccount completion:(PostResultResponse)result;
-
-
-/**
- 更新用户头像
- 
- @param image 头像图片
- @param result 结果
- */
-+ (void)updateWithProfileImage:(UIImage *)image completion:(PostResultResponse)result;
++ (void)updateWithUser:(UMComUserAccount *)userAccount
+            completion:(PostResultResponse)result;
+//
+//
+///**
+// 更新用户头像
+// 
+// @param image 头像图片
+// @param result 结果
+// */
+//+ (void)updateWithProfileImage:(UIImage *)image
+//                    completion:(PostResultResponse)result;
 
 
 /**
@@ -143,20 +146,7 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  */
 + (void)forwardWithFeed:(UMComFeed *)feed
                 newFeed:(UMComFeedEntity *)newFeed
-            completion:(PostResponseResultResponse)result;
-
-/**
- 发送Feed的评论
- 
- @param feed   被评论的Feed
- @param commentContent 评论内容
- @param replyUser 回复的用户
- @param result 结果
- */
-+ (void)postWithSourceFeed:(UMComFeed *)feed
-            commentContent:(NSString *)commentContent
-                 replyUser:(UMComUser *)replyUser
-                completion:(PostResultResponse)result;
+             completion:(PostResponseResultResponse)result;
 
 
 /**
@@ -166,7 +156,9 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @param isLiek 当isLike为YES时为点赞反之取消点赞
  @param result 结果
  */
-+ (void)likeWithFeed:(UMComFeed *)feed isLike:(BOOL)isLike completion:(PostResponseResultResponse)result;
++ (void)likeWithFeed:(UMComFeed *)feed
+              isLike:(BOOL)isLike
+          completion:(PostResponseResultResponse)result;
 
 /**
  举报Feed
@@ -183,16 +175,8 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @param feed 被删除的Feed
  @param result 结果
  */
-+ (void)deleteWithFeed:(UMComFeed *)feed completion:(PostResultResponse)result;
-
-
-/**
- 发送统计分享次数
- 
- @param feed 分享成功的feed
- @param result 结果
- */
-+ (void)postShareStaticsWithPlatformName:(NSString *)platform feed:(UMComFeed *)feed completion:(PostResultResponse)result;
++ (void)deleteWithFeed:(UMComFeed *)feed
+            completion:(PostResultResponse)result;
 
 /**
  feed收藏操作和取消收藏操作
@@ -201,7 +185,19 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @param isFavourite 是否收藏，YES为收藏操作，为NO则为取消收藏操作
  @param result      结果
  */
-+ (void)favouriteFeedWithFeed:(UMComFeed *)feed isFavourite:(BOOL)isFavourite completion:(PostResultResponse)result;
++ (void)favouriteFeedWithFeed:(UMComFeed *)feed
+                  isFavourite:(BOOL)isFavourite
+                   completion:(PostResultResponse)result;
+
+/**
+ 发送统计分享次数
+ 
+ @param feed 分享成功的feed
+ @param result 结果
+ */
++ (void)postShareStaticsWithPlatformName:(NSString *)platform
+                                    feed:(UMComFeed *)feed
+                              completion:(PostResultResponse)result;
 
 /**
  获取未读feed个数
@@ -209,17 +205,35 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @parma seq 返回的Feed流列表第一个Feed的seq属性值
  @param result 结果
  */
-+ (void)fetchUnreadFeedCountWithSeq:(NSNumber *)seq result:(PostResponseResultResponse)result;
++ (void)fetchUnreadFeedCountWithSeq:(NSNumber *)seq
+                             result:(PostResponseResultResponse)result;
 
 #pragma mark - Comment
 
+/**
+ 发送Feed带自定义字段的评论
+ 
+ @param feed   被评论的Feed
+ @param commentContent 评论内容
+ @param replyUser 回复的用户
+ @param commentCustomContent 评论自定义字段
+ @param images 评论附带图片（images中的对象可以是UIIamge类对象，也可以是UMComImageModel类对象）
+ @param result 结果
+ */
++ (void)postWithSourceFeed:(UMComFeed *)feed
+            commentContent:(NSString *)commentContent
+                 replyUser:(UMComUser *)replyUser
+      commentCustomContent:(NSString *)commentCustomContent
+                    images:(NSArray *)images
+                completion:(PostResultResponse)result;
 /**
  举报feed的评论
  
  @param commentId 评论Id
  @param result    返回结果
  */
-+ (void)spamWithComment:(UMComComment *)comment completion:(PostResponseResultResponse)result;
++ (void)spamWithComment:(UMComComment *)comment
+             completion:(PostResponseResultResponse)result;
 
 /**
  删除feed的评论
@@ -228,7 +242,20 @@ typedef void (^PostResponseResultResponse)(id responseObject, NSError *error);
  @param feed      评论的Feed
  @param result    返回结果
  */
-+ (void)deleteWithComment:(UMComComment *)comment feed:(UMComFeed *)feed completion:(PostResponseResultResponse)result;
++ (void)deleteWithComment:(UMComComment *)comment
+                     feed:(UMComFeed *)feed
+               completion:(PostResponseResultResponse)result;
+
+/**
+ 评论点赞或取消点赞
+ 
+ @param commentId 评论Id
+ @param isLike    是否点赞，如果点赞则为YES,取消点赞则为NO
+ @param result    返回结果
+ */
++ (void)likeWithComment:(UMComComment *)comment
+                 isLike:(BOOL)isLike
+             completion:(PostResponseResultResponse)result;
 
 #pragma mark - Topic
 

@@ -29,6 +29,8 @@ typedef enum {
     UMComSnsTypeOther
 }UMComSnsType;
 
+@class UMComImageModel;
+
 /**
  使用第三方登录方法后得到的登录数据构造此类
  
@@ -64,6 +66,18 @@ typedef enum {
  
  */
 @property (nonatomic, copy) NSString * icon_url;
+
+/**
+ 用户头像
+ 
+ */
+@property (nonatomic, strong) UIImage  *iconImage;
+
+/**
+ 用户头像icon模型
+ 
+*/
+@property (nonatomic, strong) UMComImageModel *iconImageModel;
 
 /**
  用户年龄

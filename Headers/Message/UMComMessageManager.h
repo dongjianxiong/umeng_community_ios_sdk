@@ -18,12 +18,6 @@
 + (void)setMessageDelegate:(id<UMComMessageDelegate>)messageDelegate;
 
 /**
- 打开开发模式
- 
- */
-+ (void)openDevelopMode;
-
-/**
  设置Appkey
  
  */

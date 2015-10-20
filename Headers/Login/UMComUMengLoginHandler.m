@@ -95,7 +95,7 @@ static UMComUMengLoginHandler *_instance = nil;
     if (imageUrl) {
         [[UMSocialData defaultData].urlResource setResourceType:UMSocialUrlResourceTypeImage url:imageUrl];
     } else{
-        shareImage = [UIImage imageNamed:@"icon"];
+        shareImage = UMComImageWithImageName(@"icon");
         [[UMSocialData defaultData].urlResource setResourceType:UMSocialUrlResourceTypeDefault];
     }
     [[UMSocialControllerService defaultControllerService] setShareText:shareFeed.text shareImage:shareImage socialUIDelegate:self];

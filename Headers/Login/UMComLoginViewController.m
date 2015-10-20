@@ -39,10 +39,10 @@
     self.wechatLoginButton.tag = UMSocialSnsTypeWechatSession;
     
     if ([UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToQQ]) {
-        [self.qqLoginButton setImage:[UIImage imageNamed:@"tencentx"] forState:UIControlStateNormal];
+        [self.qqLoginButton setImage:UMComImageWithImageName(@"tencentx") forState:UIControlStateNormal];
     }
     if ([UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToWechatSession]) {
-        [self.wechatLoginButton setImage:[UIImage imageNamed:@"wechatx"] forState:UIControlStateNormal];
+        [self.wechatLoginButton setImage:UMComImageWithImageName(@"wechatx") forState:UIControlStateNormal];
     }
     
     [self.sinaLoginButton addTarget:self action:@selector(onClickLogin:) forControlEvents:UIControlEventTouchUpInside];

@@ -22,13 +22,19 @@
 @property (nonatomic, copy) NSString *text;
 
 /**
+ 消息标题
+ 
+ */
+@property (nonatomic, copy) NSString *title;
+
+/**
  消息创建者的用户id
  
  */
 @property (nonatomic, copy) NSString *uid;
 
 /**
- 消息的图片附件
+ 消息的图片附件,images中的对象只可以是UIImage类对象或者是UMComImageModel类对象
  
  */
 @property (nonatomic, strong) NSArray *images;
@@ -63,27 +69,9 @@
 @property (nonatomic, strong) NSNumber *type;
 
 /**
- 设置自定义数据
- 
+ 自定义字段
  */
-+ (void)setCustomFeedContent:(NSString *)customContent;
+@property (nonatomic, copy) NSString * customContent;
 
-/**
-  设置自定义评论数据
- 
- */
-+ (void)setCustomCommentContent:(NSString *)customCommentContent;
-
-/**
- 返回自定义数据
- 
- */
-+ (NSString *)customContent;
-
-/**
- 返回自定义评论数据
- 
- */
-+ (NSString *)customCommentContent;
 
 @end

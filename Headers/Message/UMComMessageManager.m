@@ -11,7 +11,6 @@
 #import "UMUtils.h"
 #import "UMComFeedDetailViewController.h"
 #import "UMComNavigationController.h"
-#import "UMComHttpClient.h"
 #import "UMComRemoteNoticeViewController.h"
 
 #define BaseApiPath @"http://api.wsq.umeng.com/v2/"
@@ -36,11 +35,6 @@ static UMComMessageManager *_instance = nil;
     }
     
     return _instance;
-}
-
-+ (void)openDevelopMode
-{
-    [UMComHttpClient setBasePath:BaseApiPath];
 }
 
 - (id)init
