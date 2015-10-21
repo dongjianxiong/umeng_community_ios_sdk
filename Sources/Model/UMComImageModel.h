@@ -18,6 +18,21 @@
 
 @property (nonatomic, copy) NSString *format;
 
+/**
+ UMComImageModel初始化方法
+ @param smallImageUrl 小图URLString
+ @param midleImageUrl 中图URLString
+ @param largeImageUrl 大图URLString
+ @param format        图片格式
+ 
+ @warning format可传可不传， smallImageUrl，midleImageUrl和midleImageUrl必须至少传一个
+ */
++ (UMComImageModel *)comImageWithSmallImageUrl:(NSString *)smallImageUrl
+                                 midleImageUlr:(NSString *)midleImageUrl
+                                 largrImageUrl:(NSString *)largeImageUrl
+                                        format:(NSString *)format;
+
+
 //将用户icon图片集转化成UMComImageModel类型
 + (UMComImageModel *)comImageModelWithUserIconDict:(NSDictionary *)imageDict;
 

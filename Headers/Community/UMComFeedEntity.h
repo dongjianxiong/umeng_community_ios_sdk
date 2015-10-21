@@ -34,7 +34,7 @@
 @property (nonatomic, copy) NSString *uid;
 
 /**
- 消息的图片附件,images中的对象只可以是UIImage类对象或者是UMComImageModel类对象
+ 消息的图片附件,images中的对象只可以是UIImage类对象或者是`UMComImageModel`类对象
  
  */
 @property (nonatomic, strong) NSArray *images;

@@ -232,8 +232,6 @@ typedef void (^RequestCompletedNoPageResponse)(id responseObject, NSError *error
 // 获取配置数据
 + (void)getConfigDataWithResponse:(RequestCompletedNoPageResponse)response;
 
-+ (void)getImageUpLoadToken:(RequestCompletedNoPageResponse)response;
-
 
 /****************************POST Method*****************************************/
 
