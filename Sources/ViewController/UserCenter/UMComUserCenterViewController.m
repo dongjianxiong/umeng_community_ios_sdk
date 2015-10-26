@@ -163,6 +163,7 @@ typedef enum {
     [self setOtherWithType:UMComUserCenterDataFeeds];
     self.feedsTableView.tableHeaderView = [[UIView alloc]initWithFrame:headViewFrame];
     self.feedsTableView.scrollViewDelegate = self;
+    self.feedsTableView.feedType = feedUserType;
     self.fetchFeedsController = [[UMComUserFeedsRequest alloc] initWithUid:self.uid count:BatchSize type:UMComTimeLineTypeDefault];
     [self updateUserProfile];
  

@@ -2,7 +2,7 @@
 //  UMComFeed.h
 //  UMCommunity
 //
-//  Created by umeng on 15/10/19.
+//  Created by umeng on 15/10/22.
 //  Copyright © 2015年 Umeng. All rights reserved.
 //
 
@@ -26,7 +26,7 @@
 @property (nullable, nonatomic, retain) NSNumber *has_collected;
 @property (nullable, nonatomic, retain) id images;
 @property (nullable, nonatomic, retain) NSString *is_follow;
-@property (nullable, nonatomic, retain) NSNumber *is_lististop;
+@property (nullable, nonatomic, retain) NSNumber *is_top;
 @property (nullable, nonatomic, retain) NSNumber *is_recommend;
 @property (nullable, nonatomic, retain) NSNumber *liked;
 @property (nullable, nonatomic, retain) NSNumber *likes_count;
@@ -40,8 +40,8 @@
 @property (nullable, nonatomic, retain) NSNumber *source_mark;
 @property (nullable, nonatomic, retain) NSNumber *status;
 @property (nullable, nonatomic, retain) NSString *text;
-@property (nullable, nonatomic, retain) NSNumber *type;
 @property (nullable, nonatomic, retain) NSString *title;
+@property (nullable, nonatomic, retain) NSNumber *type;
 @property (nullable, nonatomic, retain) NSOrderedSet<UMComComment *> *comments;
 @property (nullable, nonatomic, retain) UMComUser *creator;
 @property (nullable, nonatomic, retain) NSOrderedSet<UMComFeed *> *forward_feeds;
@@ -51,4 +51,5 @@
 @property (nullable, nonatomic, retain) NSOrderedSet<UMComTopic *> *topics;
 
 @end
+
 

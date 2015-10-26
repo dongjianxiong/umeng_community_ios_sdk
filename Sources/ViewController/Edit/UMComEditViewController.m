@@ -93,12 +93,6 @@
     return self;
 }
 
-//- (id)initWithDraftFeed:(UMComFeedEntity *)draftFeed
-//{
-//    self = [[UMComEditViewController alloc] init];
-//    self.draftFeed = draftFeed;
-//    return self;
-//}
 
 -(id)initWithForwardFeed:(UMComFeed *)forwardFeed
 {
@@ -405,10 +399,6 @@
     }else{
         if (self.addedImageView.arrayImages.count == 0 || !self.addedImageView) {
             self.addedImageView.hidden = YES;
-            if (self.editViewModel.topics.count == 0) {
-//                forwordViewHeight += self.topicNoticeBgView.frame.size.height;
-            }
-
         }else{
             CGFloat locationViewHeight = 0;
             if (self.locationLabel.text.length > 0) {
@@ -447,6 +437,9 @@
     CGFloat realTextViewHeight = visibleHeight-forwordViewHeight-5;
     if (self.topicNoticeBgView.hidden == NO && self.addedImageView.arrayImages.count == 0) {
         realTextViewHeight -= deltaHeight;
+    }
+    if (self.forwardFeed) {
+        realTextViewHeight += 30;
     }
     self.realTextView.frame = CGRectMake(0, 0, self.view.frame.size.width,realTextViewHeight);
     self.forwardFeedBackground.frame = CGRectMake(self.forwardFeedBackground.frame.origin.x, self.realTextView.frame.size.height, self.forwardFeedBackground.frame.size.width,forwordViewHeight);
@@ -1049,25 +1042,27 @@
     NSMutableArray *matchWords = [NSMutableArray array];
     NSMutableArray *matchs = [NSMutableArray array];
     for (NSRegularExpression *regularExpression in _regularExpressionArray) {
-        NSArray *subMatchs = [regularExpression matchesInString:self.realTextView.text options:0 range:NSMakeRange(0, self.realTextView.text.length)];
+        NSArray *subMatchs = [regularExpression matchesInString:string options:0 range:NSMakeRange(0, string.length)];
         if (subMatchs.count > 0) {
             [matchs addObjectsFromArray:subMatchs];
         }
     }
     for (NSTextCheckingResult *match in matchs)
     {
-        for (NSString *item in checkWords) {
-            NSRange matchRange = NSMakeRange(match.range.location, match.range.length);
-            NSString *matchText = [string substringWithRange:matchRange];
-            if ([item isEqualToString:matchText]) {
-                if (![matchWords containsObject:item]) {
-                    [matchWords addObject:item];
+        NSRange matchRange = NSMakeRange(match.range.location, match.range.length);
+        NSString *matchText = [string substringWithRange:matchRange];
+        if (string.length > matchRange.location + matchRange.length) {
+            for (NSString *item in checkWords) {
+                if ([item isEqualToString:matchText]) {
+                    if (![matchWords containsObject:item]) {
+                        [matchWords addObject:item];
+                    }
+                    [attributedString addAttribute:(id)NSForegroundColorAttributeName value:(id)blueColor range:match.range];
                 }
-                [attributedString addAttribute:(id)NSForegroundColorAttributeName value:(id)blueColor range:match.range];
             }
         }
+
     }
-    
     [attributedString addAttribute:NSFontAttributeName value:(id)font range:NSMakeRange(0, attributedString.length)];
     return checkWords;
 }

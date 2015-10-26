@@ -88,6 +88,7 @@
     CGRect headViewFrame = CGRectMake(0, 0, self.view.frame.size.width, self.followBackground.frame.size.height);
     self.feedsTableView.frame = CGRectMake(0, 0, self.feedsTableView.frame.size.width, self.view.frame.size.height);
     self.feedsTableView.scrollViewDelegate = self;
+    self.feedsTableView.feedType = feedTopicType;
     self.feedsTableView.tableHeaderView = [[UIView alloc]initWithFrame:headViewFrame];
     
     self.hotUsersTableView = [[UMComUsersTableView alloc]initWithFrame:CGRectMake(self.view.frame.size.width, 0, self.feedsTableView.frame.size.width, self.feedsTableView.frame.size.height) style:UITableViewStylePlain];

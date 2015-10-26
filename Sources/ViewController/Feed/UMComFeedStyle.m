@@ -14,6 +14,7 @@
 #import "UMComTopic.h"
 #import "UMComFeed+UMComManagedObject.h"
 #import "UMComLocationModel.h"
+#import "UMComPullRequest.h"
 
 
 @implementation UMComFeedStyle
@@ -30,7 +31,11 @@
 {
     UMComFeedStyle *feedStyle = [[UMComFeedStyle alloc]init];
     feedStyle.feedType = feedType;
-    if (feedType == feedDefaultType || feedType == feedFavourateType || feedType == feedDistanceType) {
+    if (feedType == feedDetailType){
+        feedStyle.subViewDeltalWidth = 30;
+        feedStyle.subViewOriginX = 15;
+        feedStyle.nameLabelWidth = viewWidth-2*69;
+    }else{
         feedStyle.subViewDeltalWidth = TableViewDeltaWidth;
         feedStyle.subViewOriginX = 59;
         if (feedType == feedFavourateType) {
@@ -38,10 +43,6 @@
         }else{
             feedStyle.nameLabelWidth = viewWidth-feedStyle.subViewOriginX-ShareButtonWidth;
         }
-    } else if (feedType == feedDetailType){
-        feedStyle.subViewDeltalWidth = 30;
-        feedStyle.subViewOriginX = 15;
-        feedStyle.nameLabelWidth = viewWidth-2*69;
     }
     feedStyle.subViewWidth = viewWidth - feedStyle.subViewDeltalWidth;
     [feedStyle resetWithFeed:feed];
@@ -51,6 +52,11 @@
 
 - (void)resetWithFeed:(UMComFeed *)feed
 {
+    if ((self.feedType == feedFocusType || self.feedType == feedUserType || self.feedType == feedTopicType)  && [feed.is_top boolValue]) {
+        self.isShowTopIamge = YES;
+    }else{
+        self.isShowTopIamge = NO;
+    }
     self.likeCount = [feed.likes_count intValue];
     self.commentsCount = [feed.comments_count intValue];
     self.forwordCount = 0;

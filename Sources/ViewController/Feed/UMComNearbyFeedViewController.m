@@ -37,6 +37,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setTitleViewWithTitle:self.title];
+    self.title = nil;
     if (!self.location) {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted
             || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {

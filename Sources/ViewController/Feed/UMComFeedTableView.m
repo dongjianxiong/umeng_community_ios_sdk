@@ -18,7 +18,6 @@
 #import "UMComRefreshView.h"
 #import "UMComClickActionDelegate.h"
 #import "UMComScrollViewDelegate.h"
-#import "UMComFeedContentView.h"
 #import "UMComFeed.h"
 
 @interface UMComFeedTableView()<UMComRefreshViewDelegate>
@@ -101,6 +100,7 @@
     return cell;
 }
 
+
 #pragma mark UITableViewDelegate
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -132,7 +132,7 @@
             NSMutableArray *topArray = [NSMutableArray array];
             NSMutableArray *nomalArray = [NSMutableArray array];
             for (UMComFeed *feed in data) {
-                if ([feed.is_lististop boolValue] == YES) {
+                if ([feed.is_top boolValue] == YES) {
                     [topArray addObject:feed];
                 }else{
                     [nomalArray addObject:feed];
@@ -327,7 +327,7 @@
         UMComFeedStyle *newFeedStyle = [UMComFeedStyle feedStyleWithFeed:feed viewWidth:self.frame.size.width feedType:self.feedType];
         [self.dataArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             UMComFeedStyle *feedStyle = (UMComFeedStyle *)obj;
-            if ([feedStyle.feed.is_lististop boolValue] == NO) {
+            if ([feedStyle.feed.is_top boolValue] == NO) {
                 [weakSlef.dataArray insertObject:newFeedStyle atIndex:idx];
                 *stop = YES;
                 [weakSlef reloadData];

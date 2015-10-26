@@ -31,14 +31,11 @@
  */
 + (id<UMComLoginDelegate>)getLoginHandler;
 
-
 /**
  设置登录SDK实现对象
  
  */
 + (void)setLoginHandler:(id <UMComLoginDelegate>)loginHandler;
-
-
 
 /**
  获取当前是否登录
@@ -52,13 +49,11 @@
  */
 + (void)performLogin:(UIViewController *)viewController completion:(LoadDataCompletion)completion;
 
-
 /**
  第三方登录SDK登录完成后，调用此方法上传登录的账号信息
  
  */
 + (void)finishLoginWithAccount:(UMComUserAccount *)userAccount completion:(LoadDataCompletion)completion;
-
 
 /**
  第三方登录SDK登录完成并dismiss登录的页面之后，调用此方法进入社区sdk下一步的操作
@@ -68,6 +63,8 @@
 
 /**
  用户注销方法
+ 
+ @warning 调用这个方法退出登录同时会清空数据库（在没登陆的情况下慎重调用）
  */
 + (void)userLogout;
 

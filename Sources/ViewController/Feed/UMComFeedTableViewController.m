@@ -147,11 +147,6 @@
     __weak typeof(self) weakSelf = self;
     [[UMComAction action] performActionAfterLogin:nil viewController:self completion:^(NSArray *data, NSError *error) {
         UMComEditViewController *editViewController = [[UMComEditViewController alloc] init];;
-//        if ([UMComSession sharedInstance].draftFeed) {
-//            editViewController = [[UMComEditViewController alloc] initWithDraftFeed:[UMComSession sharedInstance].draftFeed];
-//        } else {
-//            editViewController = [[UMComEditViewController alloc] init];
-//        }
         UMComNavigationController *editNaviController = [[UMComNavigationController alloc] initWithRootViewController:editViewController];
         [weakSelf presentViewController:editNaviController animated:YES completion:nil];
     }];

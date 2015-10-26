@@ -73,7 +73,11 @@
 
 + (UMComSession *)sharedInstance;
 
-//用户注销
+/**
+ 用户注销 
+ 
+ @warning 调用这个方法退出登录同时会清空数据库（在没登陆的情况下慎重调用）
+ */
 - (void)userLogout;
 
 - (void)saveLoginObject:(UMComUser *)loginUser;

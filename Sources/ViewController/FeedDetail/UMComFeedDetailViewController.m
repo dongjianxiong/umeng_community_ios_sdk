@@ -23,7 +23,6 @@
 #import "UMComActionStyleTableView.h"
 #import "UMComShareCollectionView.h"
 #import "UMComFeedStyle.h"
-#import "UMComFeedContentView.h"
 #import "UMComLikeListView.h"
 #import "UMComUserCenterCollectionView.h"
 #import "UMComEditViewController.h"
@@ -38,7 +37,6 @@
 #import "UMComMutiStyleTextView.h"
 #import "UMComRefreshView.h"
 #import "UMComUser+UMComManagedObject.h"
-
 
 
 typedef enum {
@@ -149,6 +147,7 @@ static const CGFloat kLikeViewHeight = 30;
     
     self.menuView.frame = CGRectMake(0, self.view.window.frame.size.height - self.menuView.frame.size.height-heigth, self.view.frame.size.width, self.menuView.frame.size.height);
     isViewDidAppear = YES;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

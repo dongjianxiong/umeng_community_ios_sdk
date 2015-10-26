@@ -84,6 +84,7 @@
 //   关注页面
     self.feedsTableView.fetchRequest = [[UMComAllFeedsRequest alloc]initWithCount:BatchSize];
     self.feedsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.feedsTableView.feedType = feedFocusType;
     [self.feedsTableView loadAllData:nil fromServer:nil];
 
     __weak typeof(self) weakSelf = self;
@@ -544,7 +545,7 @@
 {
     CGRect _currentViewFrame = self.view.frame;
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
-    UMComSearchViewController *searchViewController =[[UMComSearchViewController alloc]initWithNibName:@"UMComSearchViewController" bundle:nil];
+    UMComSearchViewController *searchViewController =[[UMComSearchViewController alloc]init];
     UMComNavigationController *navi = [[UMComNavigationController alloc]initWithRootViewController:searchViewController];
     
     navi.view.frame = CGRectMake(0, navigationBar.frame.size.height+originOffset.y,self.view.frame.size.width, self.view.frame.size.height);

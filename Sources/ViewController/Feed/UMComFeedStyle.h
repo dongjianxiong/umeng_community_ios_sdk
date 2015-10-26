@@ -37,8 +37,12 @@ typedef enum {
     feedDefaultType = 0,
     feedDetailType = 1,
     feedFavourateType = 2,
-    feedDistanceType = 3
+    feedDistanceType = 3,
+    feedFocusType = 4,
+    feedUserType = 5,
+    feedTopicType = 6
 }UMComFeedType;
+
 
 @class UMComFeed, UMComMutiStyleTextView, UMComLocationModel;
 
@@ -60,10 +64,10 @@ typedef enum {
 @property (nonatomic, assign) CGFloat locationBgViewHeight;
 @property (nonatomic, assign) CGFloat nameLabelWidth;
 @property (nonatomic, assign) CGFloat imageGridViewOriginX;
-//@property (nonatomic, strong) NSDictionary *images;
 @property (nonatomic, strong) NSArray *imageModels;
 @property (nonatomic, copy)   NSString *dateString;
 @property (nonatomic, strong) UMComLocationModel *locationModel;
+@property (nonatomic, assign) BOOL isShowTopIamge;
 
 @property (nonatomic, assign) UMComFeedType feedType;
 
