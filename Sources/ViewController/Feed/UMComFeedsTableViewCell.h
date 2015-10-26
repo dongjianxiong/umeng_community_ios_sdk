@@ -71,6 +71,4 @@
 
 - (IBAction)onClickOnAddCollection:(id)sender;
 
-- (IBAction)onClicLocation:(id)sender;
-
 @end

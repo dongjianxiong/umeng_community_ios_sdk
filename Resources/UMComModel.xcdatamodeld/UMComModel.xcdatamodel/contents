@@ -32,8 +32,8 @@
         <attribute name="has_collected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="images" optional="YES" attributeType="Transformable" valueTransformerName="ImagesArray" syncable="YES"/>
         <attribute name="is_follow" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="is_lististop" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_recommend" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="is_top" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="liked" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="likes_count" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="Transformable" valueTransformerName="LocationDictionary" syncable="YES"/>

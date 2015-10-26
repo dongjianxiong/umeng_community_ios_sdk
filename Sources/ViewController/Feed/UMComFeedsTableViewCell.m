@@ -348,7 +348,7 @@
     }
 }
 
-- (IBAction)onClicLocation:(id)sender
+- (void)onClicLocation:(id)sender
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(customObj:clickOnLocationText:)]) {
         [self.delegate customObj:self clickOnLocationText:self.feed];

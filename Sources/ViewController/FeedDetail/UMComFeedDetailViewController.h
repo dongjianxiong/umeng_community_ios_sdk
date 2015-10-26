@@ -15,7 +15,7 @@ typedef enum {
 
 #import "UMComFeedTableViewController.h"
 
-@class UMComFeedContentView,UMComLikeListView,UMComFeed;
+@class UMComLikeListView,UMComFeed;
 
 @interface UMComFeedDetailViewController : UMComFeedTableViewController
 
