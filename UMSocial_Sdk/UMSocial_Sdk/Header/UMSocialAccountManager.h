@@ -41,11 +41,6 @@
 @property (nonatomic, copy) NSString *accessToken;
 
 /**
- 用户授权后得到的accessSecret
- */
-@property (nonatomic, copy) NSString *accessSecret;
-
-/**
  用户微博网址url
  */
 @property (nonatomic, copy) NSString *profileURL;
@@ -67,36 +62,9 @@
 @property (nonatomic, retain) NSDate *expirationDate;
 
 /**
- 更新授权时间
- */
-@property (nonatomic, retain) NSDate *refreshDate;
-
-/**
  授权到微信用到的refreshToken
  */
 @property (nonatomic, copy) NSString *refreshToken;
-
-/**
- 微信授权完成后得到的unionId
- 
- */
-@property (nonatomic, copy) NSString *unionId;
-
-/**
- 某些平台记录的应用Id
- */
-@property (nonatomic, copy) NSString *appId;
-
-/**
- 授权项
- */
-@property (nonatomic, copy) NSArray *permissions;
-
-/**
- 非授权项
- */
-@property (nonatomic, copy) NSArray *dePermissions;
-
 
 /**
  初始化方法

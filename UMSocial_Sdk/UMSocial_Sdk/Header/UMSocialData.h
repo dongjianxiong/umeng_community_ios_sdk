@@ -24,11 +24,11 @@
    标识每个不同`UMSocialData`对象的字符串
  
  */
-@property (nonatomic, readonly) NSString *identifier;
+@property (nonatomic, copy) NSString *identifier;
 
 /**
- 报表title
- 不同`UMSocialData`实例的title，在报表中可看到对应分享操作的title
+ 不同`UMSocialData`对象的title，在报表会根据看到分享操作对应的title
+ 
  */
 @property (nonatomic, copy) NSString *title;
 
