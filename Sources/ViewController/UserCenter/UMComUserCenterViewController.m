@@ -94,7 +94,10 @@ typedef enum {
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UpdateUserProfileSuccess object:nil];
+    if ([self.user.uid isEqualToString:[UMComSession sharedInstance].uid]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationPostFeedResultNotification object:nil];
+    }
 }
 
 - (void)dealloc
@@ -152,8 +155,10 @@ typedef enum {
     
     [self resetBaseInfoViews];
     
-    //当用户注销时直接跳回主页面
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popOutWhenUserlogout) name:kUserLogoutSucceedNotification object:nil];
+    //当关注某个用户成功是同时刷新登录用户的个人中心页面
+    if ([self.user.uid isEqualToString:[UMComSession sharedInstance].uid]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshUserFollow:) name:kUMComFollowUserSucceedNotification object:nil];
+    }
     if (self.user) {
         [self refreshBaseInformationWithUserProfile:self.user];
     }
@@ -293,8 +298,8 @@ typedef enum {
         }];
     }];
     if (self.user.feeds.count > 0) {
-        [self.feedsTableView.dataArray addObjectsFromArray:[self.feedsTableView transFormToFeedStylesWithFeedDatas:self.user.feeds.array]];
-        [self.feedsTableView reloadData];
+        [self.feedsTableView.dataArray addObjectsFromArray:self.user.feeds.array];
+        [self.feedsTableView reloadFeedData];
     }
     [self.feedsTableView loadAllData:nil fromServer:nil];
 }
@@ -352,12 +357,6 @@ typedef enum {
 }
 
 
-- (void)popOutWhenUserlogout
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUserLogoutSucceedNotification object:nil];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 
 #pragma mark - get user fans followers and feeds methods
 
@@ -412,16 +411,20 @@ typedef enum {
             [UMComShowToast showFetchResultTipWithError:error];
         }else{
             UMComUser *loginUser = [UMComSession sharedInstance].loginUser;
+            NSDictionary *userInfo = nil;
             if (isFollow) {
                 if (![weakSelf.fansTableView.userList containsObject:loginUser]) {
                     [weakSelf.fansTableView.userList addObject:loginUser];
                 }
+                userInfo = [NSDictionary dictionaryWithObject:@1 forKey:@"isFollow"];
             }else{
                 if ([weakSelf.fansTableView.userList containsObject:loginUser]) {
                     [weakSelf.fansTableView.userList removeObject:loginUser];
                 }
+                userInfo = [NSDictionary dictionaryWithObject:@0 forKey:@"isFollow"];
             }
             [weakSelf.fansTableView reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUMComFollowUserSucceedNotification object:self.user userInfo:userInfo];
         }
         [self refreshBaseInformationWithUserProfile:weakSelf.user];
     }];
@@ -474,6 +477,32 @@ typedef enum {
     [self setOtherWithType:UMComUserCenterDataFollows];
     [self.view bringSubviewToFront:self.followerTableView];
     [self.view bringSubviewToFront:self.headerView];
+}
+
+- (void)refreshUserFollow:(NSNotification *)notification
+{
+    UMComUser *followUser = notification.object;
+    if (![followUser isKindOfClass:[UMComUser class]]) {
+        return;
+    }
+    if (![self.user.uid isEqualToString:[UMComSession sharedInstance].uid]) {
+        return;
+    }
+    if ([[notification.userInfo valueForKey:@"isFollow"] integerValue] == 1) {
+        if (![self.followerTableView.userList containsObject:followUser]) {
+            [self.followerTableView.userList addObject:followUser];
+        }
+    }else{
+        NSMutableArray *followUsers = [NSMutableArray array];
+        for (UMComUser *user in self.followerTableView.userList) {
+            if (![followUser.uid isEqualToString:user.uid]) {
+                [followUsers addObject:user];
+            }
+        }
+        self.followerTableView.userList = followUsers;
+    }
+    [self refreshBaseInformationWithUserProfile:[UMComSession sharedInstance].loginUser];
+    [self.followerTableView reloadData];
 }
 
 -(IBAction)onClickFans:(id)sender
@@ -540,10 +569,11 @@ typedef enum {
     if ([uid isEqualToString:self.user.uid]) {
         return;
     }
+    __weak typeof(self) weakSelf = self;
     [[UMComAction action] performActionAfterLogin:user viewController:self completion:^(NSArray *data, NSError *error) {
         if (!error) {
             UMComUserCenterViewController *userCenterVc = [[UMComUserCenterViewController alloc]initWithUser:user];
-            [self.navigationController pushViewController:userCenterVc animated:YES];
+            [weakSelf.navigationController pushViewController:userCenterVc animated:YES];
         }
     }];
 }

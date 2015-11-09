@@ -374,9 +374,13 @@ typedef enum {
 @interface UMSocialFacebookData : UMSocialSnsData
 
 /**
- 分享标题
+ 分享URL标题
  */
 @property (nonatomic, copy) NSString *title;
+/**
+ 分享URL描述
+ */
+@property (nonatomic, copy) NSString *linkDescription;
 
 /**
  分享URL地址

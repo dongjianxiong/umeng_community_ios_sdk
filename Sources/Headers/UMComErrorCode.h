@@ -45,6 +45,8 @@ extern  NSInteger  const  ERR_CODE_FEED_CUSTOM_LENGTH_ERROR;
 extern  NSInteger  const  ERR_CODE_FEED_SHARE_CALLBACK_PLATFORM_ERROR;
 extern  NSInteger  const  ERR_CODE_LIKE_HAS_BEEN_CANCELED;
 extern  NSInteger  const  ERR_CODE_TITLE_LENGTH_ERROR;
+extern  NSInteger  const  ERR_CODE_FEED_COMMENT_UNAVAILABLE;
+
 
 //===topic===
 extern  NSInteger  const  ERR_CODE_HAVE_FOCUSED;
@@ -104,6 +106,7 @@ extern  NSString * const  ERR_MSG_FEED_TYPE_INVALID;
 extern  NSString * const  ERR_MSG_FEED_SHARE_CALLBACK_PLATFORM_ERROR;
 extern  NSString * const  ERR_MSG_LIKE_HAS_BEEN_CANCELED;
 extern  NSString * const  EER_MSG_TITLE_LENGTH_ERROR;
+extern  NSString * const  ERR_MSG_FEED_COMMENT_UNAVAILABLE;
 
 
 //topic

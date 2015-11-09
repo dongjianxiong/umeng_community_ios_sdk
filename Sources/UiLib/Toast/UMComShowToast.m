@@ -10,6 +10,7 @@
 #import "UMComiToast.h"
 #import "UMComLoginManager.h"
 #import "UMComSession.h"
+#import "UMComTools.h"
 
 
 @implementation UMComShowToast
@@ -73,7 +74,8 @@
     }else if (error.code == ERR_CODE_FEED_RELATED_TOPIC_ID_INVALID){
         NSLog(@"ERR_MSG_FEED_RELATED_TOPIC_ID_INVALID:%@",ERR_MSG_FEED_RELATED_TOPIC_ID_INVALID);
     }else if (error.code == ERR_CODE_COMMENT_CONTENT_LENGTH_ERROR){
-        [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(ERR_MSG_COMMENT_CONTENT_LENGTH_ERROR,@"评论内容只能在1到140个字符之间")];
+        NSString *noticeString = [NSString stringWithFormat:@"评论内容只能在1到%d个字符之间",(int)kCommentLenght];
+        [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(ERR_MSG_COMMENT_CONTENT_LENGTH_ERROR,noticeString)];
     }else if (error.code == ERR_CODE_FEED_CONTENT_LENGTH_ERROR){
         [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(ERR_MSG_FEED_CONTENT_LENGTH_ERROR,@"内容长度不符合要求")];
     }else if (error.code == ERR_CODE_FEED_TYPE_INVALID){
@@ -86,6 +88,8 @@
         [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(ERR_MSG_LIKE_HAS_BEEN_CANCELED,@"你已经取消过赞啦")];
     }else if (error.code == ERR_CODE_TITLE_LENGTH_ERROR){
         [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(EER_MSG_TITLE_LENGTH_ERROR,@"标题长度超过上限啦")];
+    }else if (error.code == ERR_CODE_FEED_COMMENT_UNAVAILABLE){
+        [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(ERR_MSG_FEED_COMMENT_UNAVAILABLE ,@"该评论已被删除")];
     }
     //====topic====
     else if (error.code == ERR_CODE_HAVE_FOCUSED){
@@ -109,9 +113,7 @@
     }
     //===midgard_commen===
     else if (error.code == ERR_CODE_REQUEST_PRARMS_ERROR){
-        [[UMComSession sharedInstance] userLogout];
         NSLog(@"ERR_MSG_REQUEST_PRARMS_ERROR:%@",ERR_MSG_REQUEST_PRARMS_ERROR);
-        
     }else if (error.code == ERR_CODE_IMAGE_UPLOAD_FAILED){
         [[self class] fetchFailWithNoticeMessage:UMComLocalizedString(ERR_MSG_IMAGE_UPLOAD_FAILED,@"图片上传失败")];
     }else if (error.code == ERR_CODE_INVALID_AUTH_TOKEN){
@@ -262,7 +264,8 @@
 
 + (void)commentMoreWord
 {
-    [[UMComiToast makeText:UMComLocalizedString(@"Comment More word",@"评论内容不能超过140个字")] show];
+    NSString *noticeString = [NSString stringWithFormat:@"评论内容不能超过%d个字",(int)kCommentLenght];
+    [[UMComiToast makeText:UMComLocalizedString(@"Comment More word",noticeString)] show];
 }
 
 + (void)fetchFailWithNoticeMessage:(NSString *)message

@@ -70,8 +70,6 @@ static UMComMessageManager *_instance = nil;
     if (messageDelegate && [messageDelegate respondsToSelector:@selector(startWithAppKey:launchOptions:)]) {
         [messageDelegate startWithAppKey:[self shareInstance].appKey launchOptions:launchOptions];
     }
-    
-
 }
 
 + (void)registerDeviceToken:(NSData *)deviceToken{

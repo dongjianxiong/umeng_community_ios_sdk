@@ -14,8 +14,6 @@
 #import "UMComFeedDetailViewController.h"
 #import "UMComShowToast.h"
 
-const NSInteger kCommentLenght = 300;
-
 
 @interface UMComCommentEditView ()<UITextFieldDelegate,UMComEmojiKeyboardViewDelegate>
 
@@ -84,7 +82,7 @@ const NSInteger kCommentLenght = 300;
 
 - (void)sendCommend
 {
-    if (self.commentTextField.text.length >= kCommentLenght) {
+    if (self.commentTextField.text.length > kCommentLenght) {
         [UMComShowToast commentMoreWord];
         return;
     }
@@ -112,7 +110,7 @@ const NSInteger kCommentLenght = 300;
 - (void)emojiKeyBoardView:(UMComEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji
 {
     NSString * commentString = [self.commentTextField.text stringByAppendingString:emoji];
-    if (commentString.length >= kCommentLenght) {
+    if (commentString.length > kCommentLenght) {
         [UMComShowToast commentMoreWord];
         self.commentTextField.text = self.lastText;
         return;
@@ -184,8 +182,8 @@ const NSInteger kCommentLenght = 300;
 {
     self.commentTextField.text = @"";
     [self.commentTextField becomeFirstResponder];
-    NSString *chContent = [NSString stringWithFormat:@"评论内容不能超过%d个字符",140];
-    NSString *key = [NSString stringWithFormat:@"Content must not exceed %d characters",140];
+    NSString *chContent = [NSString stringWithFormat:@"评论内容不能超过%d个字符",(int)kCommentLenght];
+    NSString *key = [NSString stringWithFormat:@"Content must not exceed %d characters",(int)kCommentLenght];
     self.commentTextField.placeholder = UMComLocalizedString(key,chContent);
     self.commentTextField.hidden = NO;
     self.commentInputView.hidden = NO;
@@ -212,7 +210,7 @@ const NSInteger kCommentLenght = 300;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (self.commentTextField.text.length >= kCommentLenght) {
+    if (self.commentTextField.text.length > kCommentLenght) {
         [UMComShowToast commentMoreWord];
         return NO;
     }
@@ -227,9 +225,11 @@ const NSInteger kCommentLenght = 300;
 
 - (void)onChangeTextField
 {
-    if (self.commentTextField.text.length >= kCommentLenght) {
+    NSInteger textLenght = self.commentTextField.text.length;
+    if (textLenght > kCommentLenght) {
         [UMComShowToast commentMoreWord];
-        self.commentTextField.text = self.lastText;
+        NSString *sunString = [self.commentTextField.text substringWithRange:NSMakeRange(0, kCommentLenght)];
+        self.commentTextField.text = sunString;
         return;
     }
     self.lastText = self.commentTextField.text;

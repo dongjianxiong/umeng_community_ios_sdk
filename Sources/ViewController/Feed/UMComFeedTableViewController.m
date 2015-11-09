@@ -178,7 +178,7 @@
 
 - (void)customObj:(id)obj clickOnFeedText:(UMComFeed *)feed
 {
-    if (!feed || [feed.status intValue] >= FeedStatusDeleted) {
+    if (!feed) {
         return;
     }
     UMComFeedDetailViewController * feedDetailViewController = [[UMComFeedDetailViewController alloc] initWithFeed:feed showFeedDetailShowType:UMComShowFromClickFeedText];
@@ -187,7 +187,7 @@
 
 - (void)customObj:(id)obj clickOnOriginFeedText:(UMComFeed *)feed
 {
-    if (!feed || [feed.status intValue] >= FeedStatusDeleted) {
+    if (!feed) {
         return;
     }
     UMComFeedDetailViewController * feedDetailViewController = [[UMComFeedDetailViewController alloc] initWithFeed:feed showFeedDetailShowType:UMComShowFromClickFeedText];
@@ -219,7 +219,7 @@
 
 - (void)customObj:(id)obj clickOnLikeFeed:(UMComFeed *)feed
 {
-    if (!feed || [feed.status intValue] >= FeedStatusDeleted) {
+    if (!feed) {
         return;
     }
     BOOL isLike = ![feed.liked boolValue];
@@ -235,7 +235,7 @@
 
 - (void)customObj:(id)obj clickOnForward:(UMComFeed *)feed
 {
-    if (!feed || [feed.status intValue] >= FeedStatusDeleted) {
+    if (!feed) {
         return;
     }
     [[UMComAction action] performActionAfterLogin:feed viewController:self completion:^(NSArray *data, NSError *error) {
@@ -249,7 +249,7 @@
 
 - (void)customObj:(id)obj clickOnComment:(UMComComment *)comment feed:(UMComFeed *)feed
 {
-    if (!feed || [feed.status intValue] >= FeedStatusDeleted) {
+    if (!feed) {
         return;
     }
     __weak typeof(self) weakSelf = self;
@@ -261,7 +261,7 @@
     }];
 }
 
-- (void)customObj:(id)obj clickOnImageView:(UIImageView *)feed complitionBlock:(void (^)(UIViewController *))block
+- (void)customObj:(id)obj clickOnImageView:(UIImageView *)imageView complitionBlock:(void (^)(UIViewController *viewcontroller))block
 {
     if (block) {
         block(self);
@@ -270,7 +270,7 @@
 
 - (void)customObj:(id)obj clickOnShare:(UMComFeed *)feed
 {
-    if (!feed || [feed.status intValue] >= FeedStatusDeleted) {
+    if (!feed) {
         return;
     }
     self.shareListView = [[UMComShareCollectionView alloc]initWithFrame:CGRectMake(0, self.view.window.frame.size.height, self.view.window.frame.size.width,120)];

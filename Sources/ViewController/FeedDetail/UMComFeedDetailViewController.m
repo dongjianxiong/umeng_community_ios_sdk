@@ -46,7 +46,6 @@ typedef enum {
 
 typedef void(^LoadFinishBlock)(NSError *error);
 
-#define kCommentLenght 140
 static const CGFloat kLikeViewHeight = 30;
 #define UMComCommentNamelabelHeght 20
 #define UMComCommentTextFont UMComFontNotoSansLightWithSafeSize(15)
@@ -134,6 +133,7 @@ static const CGFloat kLikeViewHeight = 30;
     [super viewWillAppear:animated];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFeedCompleteSucceed:) name:kNotificationPostFeedResultNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedDeletedCompletion:) name:kUMComFeedDeletedFinishNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -147,7 +147,6 @@ static const CGFloat kLikeViewHeight = 30;
     
     self.menuView.frame = CGRectMake(0, self.view.window.frame.size.height - self.menuView.frame.size.height-heigth, self.view.frame.size.width, self.menuView.frame.size.height);
     isViewDidAppear = YES;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -155,7 +154,8 @@ static const CGFloat kLikeViewHeight = 30;
     [super viewWillDisappear:animated];
     [self.commentEditView dismissAllEditView];
     isrefreshCommentFinish = NO;
-    [[NSNotificationCenter defaultCenter] removeObserver:kNotificationPostFeedResultNotification name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationPostFeedResultNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUMComFeedDeletedFinishNotification object:nil];
 }
 
 
@@ -212,12 +212,9 @@ static const CGFloat kLikeViewHeight = 30;
         [self reloadViewsWithFeed];
     }
     [self refreshNewData:nil];
-    
-    self.spaceHiddenView = [[UIView alloc]initWithFrame:CGRectMake(0, self.feedStyle.totalHeight+self.likeListView.frame.size.height, self.feedsTableView.frame.size.width, 6)];
-    self.spaceHiddenView.backgroundColor = [UIColor whiteColor];
-    [self.feedsTableView addSubview:self.spaceHiddenView];
-    
-    
+//    self.spaceHiddenView = [[UIView alloc]initWithFrame:CGRectMake(0, self.feedStyle.totalHeight+self.likeListView.frame.size.height, self.feedsTableView.frame.size.width, 6)];
+//    self.spaceHiddenView.backgroundColor = [UIColor whiteColor];
+//    [self.feedsTableView addSubview:self.spaceHiddenView];
 }
 
 #pragma mark - UITableViewDelegate And UITableViewDataSource
@@ -249,7 +246,7 @@ static const CGFloat kLikeViewHeight = 30;
             [cell.contentView addSubview:self.likeListView];
         }
         cell.bottomMenuBgView.hidden = YES;
-        self.spaceHiddenView.frame = CGRectMake(0, cell.frame.size.height - 5, self.feedsTableView.frame.size.width, 6);
+//        self.spaceHiddenView.frame = CGRectMake(0, cell.frame.size.height - 5, self.feedsTableView.frame.size.width, 6);
         return cell;
     }else{
         static NSString *cellID = @"CommentTableViewCell";
@@ -416,15 +413,21 @@ static const CGFloat kLikeViewHeight = 30;
 {
     __weak typeof(self) weakSelf = self;
     [self fetchOnFeedFromServer:^(NSError *error){
-        [[NSNotificationCenter defaultCenter] postNotificationName:kUMComRemoteNotificationReceivedNotification object:nil];
-        [weakSelf reloadLikeImageView:weakSelf.feed];
-        [weakSelf refreshFeedsLike:weakSelf.feedId block:^(NSError *error) {
-            [weakSelf refreshFeedsComments:weakSelf.feedId block:^(NSError *error) {
-                if (block) {
-                    block(error);
-                }
+        if (!error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUMComRemoteNotificationReceivedNotification object:nil];
+            [weakSelf reloadLikeImageView:weakSelf.feed];
+            [weakSelf refreshFeedsLike:weakSelf.feedId block:^(NSError *error) {
+                [weakSelf refreshFeedsComments:weakSelf.feedId block:^(NSError *error) {
+                    if (block) {
+                        block(nil);
+                    }
+                }];
             }];
-        }];
+        }else{
+            if (block) {
+                block(error);
+            }
+        }
     }];
 }
 
@@ -445,9 +448,13 @@ static const CGFloat kLikeViewHeight = 30;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [self.fetchFeedsController fetchRequestFromServer:^(NSArray *data, BOOL haveNextPage, NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        if ([data isKindOfClass:[NSArray class]] && data.count > 0) {
-            weakSelf.feed = data[0];
-            [weakSelf reloadViewsWithFeed];
+        if (!error) {
+            if ([data isKindOfClass:[NSArray class]] && data.count > 0) {
+                weakSelf.feed = data[0];
+                [weakSelf reloadViewsWithFeed];
+            }
+        }else{
+            [UMComShowToast showFetchResultTipWithError:error];
         }
         if (block) {
             block(error);
@@ -469,6 +476,8 @@ static const CGFloat kLikeViewHeight = 30;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (!error) {
             [weakSelf.likeListView reloadViewsWithfeed:weakSelf.feed likeArray:data];
+        }else{
+            [UMComShowToast showFetchResultTipWithError:error];
         }
         [weakSelf reloadViewsWithFeed];
         if (block) {
@@ -493,6 +502,8 @@ static const CGFloat kLikeViewHeight = 30;
         if (!error) {
             [weakSelf reloadCommentTableViewArrWithComments:data];
             [weakSelf reloadViewsWithFeed];
+        }else{
+            [UMComShowToast showFetchResultTipWithError:error];
         }
         if (weakSelf.showType == UMComShowFromClickComment || weakSelf.showType == UMComShowFromClickRemoteNotice) {
             if (isViewDidAppear == YES && weakSelf.showType == UMComShowFromClickComment) {
@@ -696,7 +707,6 @@ static const CGFloat kLikeViewHeight = 30;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [UMComPushRequest spamWithFeed:feed completion:^(NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        
         [UMComShowToast spamSuccess:error];
     }];
 }
@@ -714,10 +724,11 @@ static const CGFloat kLikeViewHeight = 30;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [UMComPushRequest deleteWithFeed:feed completion:^(NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        [UMComShowToast showFetchResultTipWithError:error];
         if (!error) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kUMComFeedDeletedFinishNotification object:feed];
-            [self.navigationController popViewControllerAnimated:YES];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kUMComFeedDeletedFinishNotification object:feed];
+//            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            [UMComShowToast showFetchResultTipWithError:error];
         }
     }];
 }
@@ -740,12 +751,11 @@ static const CGFloat kLikeViewHeight = 30;
     [[UMComAction action] performActionAfterLogin:nil viewController:self completion:^(NSArray *data, NSError *error) {
         
         [UMComPushRequest likeWithFeed:feed isLike:![feed.liked boolValue] completion:^(id responseObject, NSError *error) {
-            if (!error) {
-                [weakSelf refreshFeedsLike:feed.feedID block:nil];
-                [weakSelf reloadLikeImageView:feed];
-            }else{
+            if (error) {
                 [UMComShowToast showFetchResultTipWithError:error];
             }
+            [weakSelf refreshFeedsLike:feed.feedID block:nil];
+            [weakSelf reloadLikeImageView:feed];
             [[NSNotificationCenter defaultCenter] postNotificationName:kUMComLikeOperationFinishNotification object:feed];
         }];
     }];
@@ -843,15 +853,14 @@ static const CGFloat kLikeViewHeight = 30;
         [UMComPushRequest likeWithComment:comment
                                    isLike:![comment.liked boolValue]
                                completion:^(id responseObject, NSError *error) {
-                                   
-                                   NSIndexPath *indexPath = [weakSelf.feedsTableView indexPathForCell:cell];
-                                   [weakSelf.feedsTableView reloadRowAtIndex:indexPath];
-                                   [weakSelf.fecthCommentRequest fetchRequestFromCoreData:^(NSArray *data, NSError *error) {
-                                       if (!error) {
-                                           [weakSelf reloadCommentTableViewArrWithComments:data];
-                                           [weakSelf reloadViewsWithFeed];
-                                       }
-                                   }];
+                                   if (error.code == ERR_CODE_FEED_COMMENT_UNAVAILABLE) {
+                                       [UMComShowToast showFetchResultTipWithError:error];
+                                       [self refreshNewData:nil];
+                                   }else{
+                                       NSIndexPath *indexPath = [weakSelf.feedsTableView indexPathForCell:cell];
+                                       [weakSelf.feedsTableView reloadRowAtIndex:indexPath];
+                                   }
+                                 
                                }];
     }];
 }
@@ -902,6 +911,10 @@ static const CGFloat kLikeViewHeight = 30;
                                   images:nil
                               completion:^(NSError *error) {
         if (error) {
+            if (error.code == ERR_CODE_FEED_COMMENT_UNAVAILABLE) {
+                [UMComShowToast showFetchResultTipWithError:error];
+                [self refreshNewData:nil];
+            }
             [UMComShowToast showFetchResultTipWithError:error];
         }else{
             [weakSelf refreshFeedsComments:weakSelf.feed.feedID block:nil];
@@ -917,6 +930,14 @@ static const CGFloat kLikeViewHeight = 30;
 - (void)postFeedCompleteSucceed:(NSNotification *)notification
 {
     [self fetchOnFeedFromServer:nil];
+}
+
+- (void)feedDeletedCompletion:(NSNotification *)notification
+{
+    UMComFeed *feed = notification.object;
+    if ([feed isKindOfClass:[UMComFeed class]] && [feed.feedID isEqualToString:self.feed.feedID]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 @end

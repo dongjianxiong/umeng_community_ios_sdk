@@ -2,8 +2,8 @@
 //  UMComComment.h
 //  UMCommunity
 //
-//  Created by umeng on 15/10/15.
-//  Copyright © 2015年 Umeng. All rights reserved.
+//  Created by umeng on 15/11/2.
+//  Copyright (c) 2015年 Umeng. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,18 +14,17 @@
 
 @interface UMComComment : UMComManagedObject
 
-@property (nullable, nonatomic, retain) NSString *commentID;
-@property (nullable, nonatomic, retain) NSString *content;
-@property (nullable, nonatomic, retain) NSString *create_time;
-@property (nullable, nonatomic, retain) NSString *custom;
-@property (nullable, nonatomic, retain) NSNumber *likes_count;
-@property (nullable, nonatomic, retain) NSNumber *seq;
-@property (nullable, nonatomic, retain) NSNumber *status;
-@property (nullable, nonatomic, retain) NSNumber *liked;
-@property (nullable, nonatomic, retain) id image_urls;
-@property (nullable, nonatomic, retain) UMComUser *creator;
-@property (nullable, nonatomic, retain) UMComFeed *feed;
-@property (nullable, nonatomic, retain) UMComUser *reply_user;
+@property (nonatomic, retain) NSString * commentID;
+@property (nonatomic, retain) NSString * content;
+@property (nonatomic, retain) NSString * create_time;
+@property (nonatomic, retain) NSString * custom;
+@property (nonatomic, retain) id image_urls;
+@property (nonatomic, retain) NSNumber * liked;
+@property (nonatomic, retain) NSNumber * likes_count;
+@property (nonatomic, retain) NSNumber * seq;
+@property (nonatomic, retain) NSNumber * status;
+@property (nonatomic, retain) UMComUser *creator;
+@property (nonatomic, retain) UMComFeed *feed;
+@property (nonatomic, retain) UMComUser *reply_user;
 
 @end
-

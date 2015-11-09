@@ -66,6 +66,8 @@ NSInteger  const  ERR_CODE_FEED_CUSTOM_LENGTH_ERROR = 20010;
 NSInteger  const  ERR_CODE_FEED_SHARE_CALLBACK_PLATFORM_ERROR = 20011;
 NSInteger  const  ERR_CODE_LIKE_HAS_BEEN_CANCELED = 20012;
 NSInteger  const  ERR_CODE_TITLE_LENGTH_ERROR = 20013;
+NSInteger  const  ERR_CODE_FEED_COMMENT_UNAVAILABLE = 20014;
+
 
 NSString * const  ERR_MSG_FEED_UNAVAILABLE = @"feed is unavailable";
 NSString * const  ERR_MSG_FEED_NOT_EXSIT = @"feed is not exsit";
@@ -73,13 +75,14 @@ NSString * const  ERR_MSG_FEED_HAS_BEEN_LIKED = @"feed has been liked";
 NSString * const  ERR_MSG_FEED_RELATED_USER_ID_INVALID = @"feed related uid is invalid";
 NSString * const  ERR_MSG_FEED_CANNOT_FORWARD = @"feed can\'t be reposted";
 NSString * const  ERR_MSG_FEED_RELATED_TOPIC_ID_INVALID = @"feed related topic id is invalid";
-NSString * const  ERR_MSG_COMMENT_CONTENT_LENGTH_ERROR = @"a comment length should be in range 1, 140";
+NSString * const  ERR_MSG_COMMENT_CONTENT_LENGTH_ERROR = @"a comment length should be in range 1, 300";
 NSString * const  ERR_MSG_FEED_CONTENT_LENGTH_ERROR = @"a feed length should be in range 1, 300";
 NSString * const  ERR_MSG_FEED_CUSTOM_LENGTH_ERROR = @"a custom string length should be in range 0, 50";
 NSString * const  ERR_MSG_FEED_TYPE_INVALID = @"invalid feed_type value";
 NSString * const  ERR_MSG_FEED_SHARE_CALLBACK_PLATFORM_ERROR = @"invalid share platform";
 NSString * const  ERR_MSG_LIKE_HAS_BEEN_CANCELED = @"like has been canceled.";
 NSString * const  EER_MSG_TITLE_LENGTH_ERROR = @"title length max 100";
+NSString * const  ERR_MSG_FEED_COMMENT_UNAVAILABLE = @"comment is unavailable";
 
 //===topic===
 NSInteger  const  ERR_CODE_HAVE_FOCUSED = 30001;

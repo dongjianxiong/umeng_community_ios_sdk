@@ -10,15 +10,17 @@
 #define DEFAULT_VOID_COLOR [UIColor whiteColor]
 
 NSInteger const kFeedContentLength = 300;
+NSInteger const kCommentLenght = 300;
 CGFloat const kUMComRefreshOffsetHeight = 60.0f;
 CGFloat const kUMComLoadMoreOffsetHeight = 50.0f;
 
 //notifications
-NSString * const kUserLoginSecceedNotification = @"kUserLoginSecceedNotification";//用户登录成功通知
+NSString * const kUserLoginSucceedNotification = @"kUserLoginSucceedNotification";//用户登录成功通知
 NSString * const kUserLogoutSucceedNotification = @"kUserLogoutSucceedNotification";//用户退出登录通知
 
+NSString * const kUMComFollowUserSucceedNotification = @"kUMComFollowUserSucceedNotification";
+
 NSString * const kNotificationPostFeedResultNotification = @"kNotificationPostFeedResultNotification";
-NSString * const kNotificationForwardFeedResultNotification = @"kNotificationForwardFeedResultNotification";
 NSString * const kUMComFeedDeletedFinishNotification = @"kUMComFeedDeletedFinishNotification";
 NSString * const kUMComCommentOperationFinishNotification = @"kUMComCommentOperationFinishNotification";
 NSString * const kUMComLikeOperationFinishNotification = @"kUMComLikeOperationFinishNotification";
@@ -27,8 +29,6 @@ NSString * const kUMComRemoteNotificationReceivedNotification = @"kUMComRemoteNo
 NSString * const kUMComUnreadNotificationRefreshNotification = @"kUMComUnreadNotificationRefreshNotification";
 
 NSString * const kUMComCommunityInvalidErrorNotification = @"kUMComCommunityInvalidErrorNotification";
-
-
 
 @implementation UMComTools
 

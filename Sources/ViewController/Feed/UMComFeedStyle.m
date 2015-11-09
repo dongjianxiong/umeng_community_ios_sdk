@@ -105,7 +105,7 @@
         NSMutableString *oringFeedString = [NSMutableString stringWithString:@""];
         NSString *originUserName = origin_feed.creator.name? origin_feed.creator.name : @"";
         if ([feed.status intValue] >= FeedStatusDeleted ) {
-            origin_feed.text = UMComLocalizedString(@"Spam Content", @"该收藏Feed内容已被删除");
+            origin_feed.text = UMComLocalizedString(@"Delete Content", @"该内容已被删除");
         }
         else if ([origin_feed.status intValue] >= FeedStatusDeleted) {
             origin_feed.text = UMComLocalizedString(@"Delete Content", @"该内容已被删除");

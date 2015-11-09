@@ -261,7 +261,11 @@
         self.realTextView.text = self.draftFeed.text;
         [self getFeedCheckWordsFromFeed:nil];
         self.checkWords = [self getCheckWords];
-        [self updateiOS7AndLaterRealTextView];
+        if ([self isIos7AndLater]) {
+            [self updateiOS7AndLaterRealTextView];
+        }else{
+            [self updateiOS6AndEarlierTextView:self.realTextView];
+        }
     }
     
     noticeLabel = [[UILabel alloc]initWithFrame:self.realTextView.frame];
@@ -314,7 +318,9 @@
     self.forwardImage = [[[UMComImageView imageViewClassName] alloc]initWithPlaceholderImage:nil];
     self.forwardImage.frame = CGRectMake(self.view.frame.size.width-92, 11, 70, 70);
     [self.forwardFeedBackground addSubview:self.forwardImage];
-    NSString *showForwardText = [NSString stringWithFormat:@"@%@：%@", self.originFeed.creator.name? self.originFeed.creator.name:@"",self.originFeed.text?self.originFeed.text:@""];
+    NSString *nameString = self.originFeed.creator.name? self.originFeed.creator.name:@"";
+    NSString *feedString = self.originFeed.text?self.originFeed.text:@"";
+    NSString *showForwardText = [NSString stringWithFormat:@"@%@：%@ ", nameString, feedString];
     [self createForwardTextView:showForwardText];
     
     self.topicButton.hidden = YES;
@@ -392,7 +398,7 @@
     if (self.originFeed) {
         forwordViewHeight = self.forwardFeedBackground.frame.size.height;
         if (!self.originFeed.images || [self.originFeed.images count] == 0) {
-            self.fakeForwardTextView.frame = CGRectMake(0, 0, self.forwardFeedBackground.frame.size.width, self.fakeForwardTextView.frame.size.height);
+            self.fakeForwardTextView.frame = CGRectMake(0, self.fakeForwardTextView.frame.origin.y, self.forwardFeedBackground.frame.size.width, self.fakeForwardTextView.frame.size.height);
         }
         self.atFriendButton.center = CGPointMake(self.view.frame.size.width/2, self.editToolView.frame.size.height/2);
 
@@ -759,6 +765,9 @@
 
 - (void)createiOS7AndLaterTextView
 {
+    if (![self isIos7AndLater]) {
+        return;
+    }
     NSTextStorage *textStorage = [[NSTextStorage alloc]init];
     
     NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
@@ -943,6 +952,7 @@
             textView.text = tempString;
             textView.selectedRange = NSMakeRange(location+1, 0);
             [textView resignFirstResponder];
+            [self textViewDidChange:textView];
             return YES;
         }
     }
@@ -996,6 +1006,9 @@
 
 - (NSArray *)updateiOS7AndLaterRealTextView
 {
+    if (![self isIos7AndLater]) {
+        return nil;
+    }
     [self.realTextView.textStorage addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, self.realTextView.textStorage.length)];
     NSMutableArray *matchWords = [NSMutableArray array];
     NSMutableArray *matchs = [NSMutableArray array];
@@ -1182,9 +1195,6 @@
         [UMComShowToast showFetchResultTipWithError:error];
     } else if([responseObject isKindOfClass:[NSArray class]] && responseObject.count > 0) {
         UMComFeed *feed = responseObject.firstObject;
-        if (self.forwardFeed) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationForwardFeedResultNotification object:self.forwardFeed];
-        }
         [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationPostFeedResultNotification object:feed];
         [UMComShowToast createFeedSuccess];
     }

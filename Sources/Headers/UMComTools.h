@@ -44,15 +44,16 @@
 #define UserNameString  @"@%@"
 
 extern NSInteger const kFeedContentLength;//feed列表字符限制
+extern NSInteger const kCommentLenght; //feed的评论字数限制
 extern CGFloat const kUMComRefreshOffsetHeight;//下拉刷新控件显示的高度
 extern CGFloat const kUMComLoadMoreOffsetHeight;//上拉加载控件显示的高度
 
 //Notification Name
-extern NSString * const kUserLoginSecceedNotification;//用户登录成功通知
+extern NSString * const kUserLoginSucceedNotification;//用户登录成功通知
 extern NSString * const kUserLogoutSucceedNotification;//用户退出登录通知
+extern NSString * const kUMComFollowUserSucceedNotification;//关注用户成功之后的通知
 
 extern NSString * const kNotificationPostFeedResultNotification;//feed发送完成通知
-extern NSString * const kNotificationForwardFeedResultNotification;//feed转发完成通知
 extern NSString * const kUMComFeedDeletedFinishNotification;//feed删除成功通知
 extern NSString * const kUMComCommentOperationFinishNotification;//评论发送完成通知
 extern NSString * const kUMComLikeOperationFinishNotification;//点赞或取消点赞操作完成通知

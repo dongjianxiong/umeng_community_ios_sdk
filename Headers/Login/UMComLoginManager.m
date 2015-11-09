@@ -127,7 +127,7 @@ static UMComLoginManager *_instance = nil;
     SafeCompletionDataAndError(completion, responseObject, error);
     
     NSString *uid = [[responseObject firstObject] uid];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kUserLoginSecceedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kUserLoginSucceedNotification object:nil];
     UMLog(@"error is %@",error);
     NSString *aliasKey = @"UM_COMMUNITY";
     [UMComMessageManager addAlias:uid type:aliasKey response:^(id responseObject, NSError *error) {

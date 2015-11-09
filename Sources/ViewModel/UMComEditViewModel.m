@@ -45,16 +45,16 @@
     {
         self.editContent = [[NSMutableString alloc] init];
     }
-    
+    NSRange tempRange = self.seletedRange;
     NSMutableString *editString = self.editContent;
     if (editString.length >= self.seletedRange.location) {
-        NSRange tempRange = self.seletedRange;
         [editString insertString:appendString atIndex:tempRange.location];
-        self.seletedRange = NSMakeRange(tempRange.location+appendString.length, 0);
+    }else{
+        [editString appendString:appendString];
     }
+    self.seletedRange = NSMakeRange(tempRange.location+appendString.length, 0);
     [self setValue:editString forKey:@"editContent"];
 }
-
 
 - (void)postEditContentWithImages:(NSArray *)images
                         response:(void (^)(id responseObject,NSError *error))response

@@ -68,6 +68,7 @@
 
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     if ([UIApplication sharedApplication].keyWindow.rootViewController == self.navigationController) {
@@ -124,8 +125,8 @@
     
     [self setScrollToTopWithCurrentPage:0];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNewFeedDataWhenFeedCreatSucceed:) name:kNotificationPostFeedResultNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshAllDataWhenLoginUserChange) name:kUserLoginSecceedNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshAllDataWhenLoginUserChange) name:kUserLogoutSucceedNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshAllDataWhenLoginUserChange:) name:kUserLoginSucceedNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshAllDataWhenLoginUserChange:) name:kUserLogoutSucceedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshMessageData:) name:kUMComRemoteNotificationReceivedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshMessageData:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [self.view bringSubviewToFront:self.searchBar];
@@ -164,6 +165,10 @@
     self.findButton.alpha = 0;
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+}
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
 {
@@ -172,6 +177,26 @@
     self.topicsTableView.hidden = YES;
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    self.feedsTableView = nil;
+    self.recommentfeedTableView = nil;
+    self.topicsTableView = nil;
+    self.searchBar = nil;
+    self.allTopicsRequest = nil;
+    self.titlePageControl = nil;
+    self.findButton = nil;
+    self.itemNoticeView = nil;
+}
+
+#pragma mark - privite methods
+/************************************************************************************/
 - (void)creatSearchBar
 {
     UMComSearchBar *searchBar = [[UMComSearchBar alloc] initWithFrame:CGRectMake(0, -0.3, self.view.frame.size.width, 40)];
@@ -267,8 +292,8 @@
 {
     int unReadCount = (int)compareArr.count;
     for (UMComFeed *feed in compareArr) {
-        for (UMComFeedStyle *feedStyle in currentArr) {
-            if ([feed.feedID isEqualToString:feedStyle.feed.feedID]) {
+        for (UMComFeed *curentFeed in currentArr) {
+            if ([feed.feedID isEqualToString:curentFeed.feedID]) {
                 unReadCount -= 1;
                 break;
             }
@@ -279,11 +304,6 @@
     }
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)addNewFeedDataWhenFeedCreatSucceed:(NSNotification *)notification
 {
     UMComFeed *newFeed = (UMComFeed *)notification.object;
@@ -291,8 +311,16 @@
 }
 
 #pragma mark - notifcation action
-- (void)refreshAllDataWhenLoginUserChange
+- (void)refreshAllDataWhenLoginUserChange:(NSNotification *)notification
 {
+    if ([kUserLogoutSucceedNotification isEqualToString:notification.name]) {
+        [self.feedsTableView.dataArray removeAllObjects];
+        [self.feedsTableView reloadFeedData];
+        [self.recommentfeedTableView.dataArray removeAllObjects];
+        [self.recommentfeedTableView reloadFeedData];
+        [self.topicsTableView.dataArray removeAllObjects];
+        [self.topicsTableView reloadData];
+    }
     __weak typeof(self) weakSelf = self;
     if (self.titlePageControl.currentPage == 0) {
         [self.feedsTableView refreshNewDataFromServer:^(NSArray *data, BOOL haveNextPage, NSError *error) {
@@ -317,54 +345,6 @@
     [self refreshMessageData:nil];
 }
 
-#pragma mark - searchBarDelelagte
-
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
-{
-    if (self.titlePageControl.currentPage != 2) {
-        [[UMComAction action] performActionAfterLogin:searchBar.text viewController:self completion:^(NSArray *data, NSError *error) {
-            if (!error) {
-                [self transitionToSearFeedViewController];
-            }
-        }];
-        return NO;
-    }else{
-        self.editButton.hidden = YES;
-        return YES;
-    }
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
-{
-    if (self.titlePageControl.currentPage == 2) {
-        [self searchWhenClickAtSearchButtonResult:searchBar.text];
-    }
-    [self hidenKeyBoard];
-    
-}
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-{
-    if (self.titlePageControl.currentPage == 2) {
-        [self reloadTopicsDataWithSearchText:searchBar.text];
-    }
-}
-
-#pragma mark - UMComScrollViewDelegate
-- (void)customScrollViewDidScroll:(UIScrollView *)scrollView lastPosition:(CGPoint)lastPosition
-{
-    if (scrollView == self.topicsTableView) {
-        [self.searchBar resignFirstResponder];
-    }else{
-        [self setEditButtonAnimationWithScrollView:scrollView lastPosition:lastPosition];
-    }
-}
-
-- (void)customScrollViewDidEnd:(UIScrollView *)scrollView lastPosition:(CGPoint)lastPosition
-{
-    if (scrollView != self.topicsTableView) {
-        [self setEditButtonAnimationWithScrollView:scrollView lastPosition:lastPosition];
-    }
-}
 
 #pragma mark - 视图切换逻辑
 
@@ -435,7 +415,7 @@
             weakSelf.recommentfeedTableView.frame = CGRectMake(weakSelf.view.frame.size.width, weakSelf.recommentfeedTableView.frame.origin.y, weakSelf.recommentfeedTableView.frame.size.width, weakSelf.recommentfeedTableView.frame.size.height);
             weakSelf.topicsTableView.frame = CGRectMake(weakSelf.view.frame.size.width, weakSelf.topicsTableView.frame.origin.y, weakSelf.topicsTableView.frame.size.width, weakSelf.topicsTableView.frame.size.height);
         }else if (currentPage == 1){
-            if (weakSelf.recommentfeedTableView.dataArray.count == 0) {
+            if (weakSelf.recommentfeedTableView.feedStyleList.count == 0) {
                 [weakSelf.recommentfeedTableView loadAllData:nil fromServer:nil];
             }
             weakSelf.feedsTableView.frame = CGRectMake(-weakSelf.view.frame.size.width, weakSelf.feedsTableView.frame.origin.y, weakSelf.feedsTableView.frame.size.width, weakSelf.feedsTableView.frame.size.height);
@@ -535,12 +515,6 @@
     }
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)transitionToSearFeedViewController
 {
     CGRect _currentViewFrame = self.view.frame;
@@ -571,6 +545,58 @@
         weakSelf.view.frame = CGRectMake(0,- navigationBar.frame.size.height-originOffset.y, weakSelf.view.frame.size.width, weakSelf.view.frame.size.height+navigationBar.frame.size.height+originOffset.y);
         navi.view.frame = CGRectMake(0, 20,weakSelf.view.frame.size.width, weakSelf.view.frame.size.height+navigationBar.frame.size.height);
     } completion:nil];
+}
+
+
+
+#pragma mark - searchBarDelelagte
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    __weak typeof(self) weakSelf = self;
+    if (self.titlePageControl.currentPage != 2) {
+        [[UMComAction action] performActionAfterLogin:searchBar.text viewController:self completion:^(NSArray *data, NSError *error) {
+            if (!error) {
+                [weakSelf transitionToSearFeedViewController];
+            }
+        }];
+        return NO;
+    }else{
+        self.editButton.hidden = YES;
+        return YES;
+    }
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
+{
+    if (self.titlePageControl.currentPage == 2) {
+        [self searchWhenClickAtSearchButtonResult:searchBar.text];
+    }
+    [self hidenKeyBoard];
+    
+}
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if (self.titlePageControl.currentPage == 2) {
+        [self reloadTopicsDataWithSearchText:searchBar.text];
+    }
+}
+
+#pragma mark - UMComScrollViewDelegate
+- (void)customScrollViewDidScroll:(UIScrollView *)scrollView lastPosition:(CGPoint)lastPosition
+{
+    if (scrollView == self.topicsTableView) {
+        [self.searchBar resignFirstResponder];
+    }else{
+        [self setEditButtonAnimationWithScrollView:scrollView lastPosition:lastPosition];
+    }
+}
+
+- (void)customScrollViewDidEnd:(UIScrollView *)scrollView lastPosition:(CGPoint)lastPosition
+{
+    if (scrollView != self.topicsTableView) {
+        [self setEditButtonAnimationWithScrollView:scrollView lastPosition:lastPosition];
+    }
 }
 
 #pragma mark - UMComClickActionDelegate

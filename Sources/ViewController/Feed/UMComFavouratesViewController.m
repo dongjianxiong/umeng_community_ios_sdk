@@ -59,29 +59,30 @@
 #pragma mark - notification 
 - (void)favouratesFeedOperationFinish:(NSNotification *)notification
 {
-    UMComFeed *feed = notification.object;
-    if ([feed isKindOfClass:[UMComFeed class]]) {
-        if ([feed.has_collected boolValue] == YES) {
-            BOOL isContain = NO;
-            for (UMComFeedStyle *feedStyle in self.feedsTableView.dataArray) {
-                if ([feedStyle.feed.feedID isEqualToString:feed.feedID]) {
-                    isContain = YES;
-                }
-            }
-            if (isContain == NO) {
-                UMComFeedStyle *feedStyle = [UMComFeedStyle feedStyleWithFeed:feed viewWidth:self.feedsTableView.frame.size.width feedType:self.feedsTableView.feedType];
-                [self.feedsTableView.dataArray insertObject:feedStyle atIndex:0];
-            }
-        }else{
-            [self.feedsTableView.dataArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                UMComFeedStyle *feedStyle = obj;
-                if ([feed.feedID isEqualToString:feedStyle.feed.feedID] && [feed.has_collected boolValue] == NO) {
-                    *stop = YES;
-                    [self.feedsTableView.dataArray removeObject:obj];
-                }
-            }];
-        }
-    }
+    [self.feedsTableView reloadFeedData];
+//    UMComFeed *feed = notification.object;
+//    if ([feed isKindOfClass:[UMComFeed class]]) {
+//        if ([feed.has_collected boolValue] == YES) {
+//            BOOL isContain = NO;
+//            for (UMComFeedStyle *feedStyle in self.feedsTableView.dataArray) {
+//                if ([feedStyle.feed.feedID isEqualToString:feed.feedID]) {
+//                    isContain = YES;
+//                }
+//            }
+//            if (isContain == NO) {
+//                UMComFeedStyle *feedStyle = [UMComFeedStyle feedStyleWithFeed:feed viewWidth:self.feedsTableView.frame.size.width feedType:self.feedsTableView.feedType];
+//                [self.feedsTableView.dataArray insertObject:feedStyle atIndex:0];
+//            }
+//        }else{
+//            [self.feedsTableView.dataArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                UMComFeedStyle *feedStyle = obj;
+//                if ([feed.feedID isEqualToString:feedStyle.feed.feedID] && [feed.has_collected boolValue] == NO) {
+//                    *stop = YES;
+//                    [self.feedsTableView.dataArray removeObject:obj];
+//                }
+//            }];
+//        }
+//    }
     [self.feedsTableView reloadData];
 }
 

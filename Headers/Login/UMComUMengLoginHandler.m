@@ -108,7 +108,9 @@ static UMComUMengLoginHandler *_instance = nil;
 {
     if (response.responseCode == UMSResponseCodeSuccess) {
         NSString *platform = [[response.data allKeys] objectAtIndex:0];
-        [UMComPushRequest postShareStaticsWithPlatformName:platform feed:self.feed completion:nil];
+        [UMComPushRequest postShareStaticsWithPlatformName:platform feed:self.feed completion:^(NSError *error) {
+            
+        }];
     }
 }
 @end
